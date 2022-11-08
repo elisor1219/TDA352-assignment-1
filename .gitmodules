@@ -1,3 +1,0 @@
-[submodule "off-chain-payment-channel"]
-	path = bonus-assignments/off-chain-payment-channel
-	url = https://github.com/elisor1219/off-chain-payment-channel
