@@ -5,8 +5,8 @@ public class Attacker {
     private CommitmentScheme CS;
     private boolean debugMode = false;
     private boolean loadBarOn = false;
-    private int maxSearchFindMessage = (int) Math.pow(2,16);
-    private int maxSearchBreakBinding = (int) Math.pow(2,16);
+    private int maxSearchFindMessage = (int) Math.pow(2,18);
+    private int maxSearchBreakBinding = (int) Math.pow(2,18);
 
     public Attacker(){
     }

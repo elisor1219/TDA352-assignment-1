@@ -1,3 +1,9 @@
+# Text files
+*.txt
+
+#
+*.png
+
 # Compiled class file
 *.class
 
