@@ -7,7 +7,7 @@ import java.util.Random;
 public class MainFile {
     static int K = 16;
     //To not use the trunc. function, set this to a large number, i.e. 100000
-    static int X = 30;
+    static int X = 16;
     static boolean debugMode = false;
     public static void main(String[] args) throws NoSuchAlgorithmException {
         //Best way here would be to move the inside of the for-loop to 
