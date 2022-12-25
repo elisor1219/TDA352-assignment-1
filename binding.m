@@ -131,7 +131,7 @@ bindingBrokenProb = sum(bindingBroken,1)./size(bindingBroken,1);
 plot(XIterations, bindingBrokenProb(XIterations+1));
 toc
 
-%% Version 3
+%% Version 3 best version without parfar
 clc;clf;clear;
 
 %Throw total of 2^17 balls
@@ -144,7 +144,7 @@ XIterations = 0:40;     %From assignment X \in [0,30]
 
 bindingBroken = zeros(size(goForIterations,2), size(XIterations,2));
 
-parfor i = XIterations
+for i = XIterations
     X = i;
     bins = 2.^X;
     i
@@ -169,7 +169,7 @@ bindingBrokenProb = sum(bindingBroken,1)./size(bindingBroken,1);
 plot(XIterations, bindingBrokenProb(XIterations+1));
 toc
 
-%% Version 4
+%% Version 4 best version in a parfor
 clc;clf;clear;
 
 %Throw total of 2^17 balls
@@ -178,7 +178,7 @@ tic
 redBalls = 2^16;         %16 is from the assignment
 greenBalls = 2^16;
 goForIterations = 1:3000;
-XIterations = 40:40;     %From assignment X \in [0,30]
+XIterations = 0:40;     %From assignment X \in [0,30]
 
 bindingBroken = zeros(size(goForIterations,2), size(XIterations,2));
 
@@ -280,7 +280,11 @@ indexToDupes = find(not(ismember(1:numel(A),i)))
 tic
 ballsInWhichBin = randUniform(1, bins, 2*1000, redBalls);
 toc
-
+%%
+tic
+randi(bins, 2*3000, redBalls);
+%ballsInWhichBin = randUniform(1, bins, 2*3000, redBalls);
+toc
 
 
 
