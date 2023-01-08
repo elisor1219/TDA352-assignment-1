@@ -177,7 +177,7 @@ clc;clf;clear;
 tic
 redBalls = 2^16;         %16 is from the assignment
 greenBalls = 2^16;
-goForIterations = 1:1;
+goForIterations = 1:10;
 XIterations = 0:40;     %From assignment X \in [0,30]
 
 bindingBroken = zeros(size(goForIterations,2), size(XIterations,2));
@@ -283,7 +283,7 @@ clc;clf;clear;
 tStart = tic;
 redBalls = 1;
 greenBalls = 2^16;
-goForIterations = 1:200;
+goForIterations = 1:1000;
 XIterations = 0:30;     %From assignment X \in [0,30]
 
 bindingBroken = zeros(size(goForIterations,2), size(XIterations,2));
@@ -316,7 +316,7 @@ end
 
 bindingBrokenProb = sum(bindingBroken,1)./size(bindingBroken,1);
 toc(tStart)
-%% Plot for v4
+%% Plot for v6
 clf;
 x = 0:30;
 sigmoidFun = @(x) 1 ./ (1 + exp(17 - x));
@@ -330,14 +330,14 @@ plot(x, simFun(x), "LineWidth", 2)
 hold off
 grid on
 
-textInLegend = ["Overfull bins", "$\frac{1}{1 \, + \, \exp ({17 - x})}$"];
+textInLegend = ["Overfull bins", "$1 - \frac{1}{1 \, + \, \exp ({17 - x})}$"];
 legend(textInLegend, "FontSize",20, 'Location','southwest', 'Interpreter','latex')
 title("Probability of breaking the binding property", "FontSize",14)
 xlabel("X = truncation point", "FontSize",15)
 ylabel("Probability", "FontSize",15)
 axis([0 XIterations(end) 0 1.1])
 
-saveas(gcf, "bindingBinsV4.png");
+saveas(gcf, "bindingBinsV6.png");
 %%
 clf;
 hold on
@@ -368,3 +368,58 @@ c = c';
 c = c(:)';
 cBin = c(1:X);
 disp(cBin)
+
+
+
+
+
+
+
+
+%%
+%% A stronger simulation using SHA256
+clc;clear;clf;
+
+K = 16;             %Given in assignment
+testPerX = 12;
+won = zeros(testPerX, 31);
+timer = zeros(testPerX, 31);
+
+tic
+for i = 0:30
+    X = i;
+    disp("Starting work on " + X)
+    nextIndex = i+1;
+    parfor j = 1:testPerX
+        sha256hasher = System.Security.Cryptography.SHA256Managed;
+        [won(j, nextIndex), timer(j, nextIndex)] = securityGameV3(X, K, sha256hasher);
+        disp("    Done with " + X + ":" + j + "/" + testPerX)
+    end
+end
+toc
+
+%%
+
+% Plot the binding prob.
+clc;clf;
+x = 0:30;
+simFun = @(x) 1 - 1 ./ (1 + exp(17 - x));
+hold on
+%Plot the simulation
+plot(x, mean(won,1), "LineWidth", 2);
+%Plot a similar function
+plot(x, simFun(x), "LineWidth", 2)
+grid on
+
+textInLegend = ["Simulation", "$1 - \frac{1}{1 \, + \, \exp ({17 - x})}$"];
+legend(textInLegend, "FontSize", 20, 'Location','southwest', 'Interpreter','latex')
+title("Probability of breaking the binding property", "FontSize",14)
+xlabel("X = truncation point", "FontSize",15)
+ylabel("Probability", "FontSize",15)
+axis([0, 30, 0, 1.1])
+
+
+hold off
+saveas(gcf, "bindingSHA256.png")
+
+

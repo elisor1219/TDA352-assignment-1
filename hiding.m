@@ -176,7 +176,7 @@ saveas(gcf, "hidingNewCertain.png")
 clc;clear;clf;
 
 K = 16;             %Given in assignment
-testPerX = 100;
+testPerX = 200;
 won = zeros(testPerX, 31);
 timer = zeros(testPerX, 31);
 
