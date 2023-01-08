@@ -167,7 +167,6 @@ axis([0, 30, 0, 1.1])
 saveas(gcf, "hidingNewCertain.png")
 
 
-
 %% Version 2
 % We only break the hiding property if we can for 100% find m and r that
 % gives us c. So if we have two two r's for the same m that is not a

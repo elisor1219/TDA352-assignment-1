@@ -283,7 +283,7 @@ clc;clf;clear;
 tStart = tic;
 redBalls = 1;
 greenBalls = 2^16;
-goForIterations = 1:1000;
+goForIterations = 1:10000;
 XIterations = 0:30;     %From assignment X \in [0,30]
 
 bindingBroken = zeros(size(goForIterations,2), size(XIterations,2));

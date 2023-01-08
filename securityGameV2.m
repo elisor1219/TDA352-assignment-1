@@ -25,43 +25,34 @@ c = commit(m, r, X, sha256hasher);
 %3) Advr. - - - - - - - - - - - - - - - - - -
 %"Setting" the variables. Could use adversaryWon, but ffel like it is more
 %readible now.
-brokeHidenProp = false;
 adversaryWon = false;
+foundM0Key = false;
+foundM1Key = false;
 
+mTest = [dec2bin(0); dec2bin(1)];
 
-%Start by testing for m_0, aka message = 0
-mTest = dec2bin(0);
 for i = 1:2^K
     rTest = dec2bin(i, K);
-    cTest = commit(mTest, rTest, X, sha256hasher);
-    if strcmp(cTest, c)
-        %If we find a collison, we loose
-        if brokeHidenProp
-            adversaryWon = false;
-            tEnd = toc;
-            return
-        end
-        brokeHidenProp = true;
+    cTest1 = commit(mTest(1), rTest, X, sha256hasher);
+    cTest2 = commit(mTest(2), rTest, X, sha256hasher);
+    
+    %Start by testing for m_0, aka message = 0
+    if ~foundM0Key && strcmp(cTest1, c)
+        foundM0Key = true;
+    end
+    %Now test for m_1, aka message = 1
+    if ~foundM1Key && strcmp(cTest2, c)
+        foundM1Key = true;
+    end
+    %If we find a collison, we loose
+    if foundM0Key && foundM1Key
+        adversaryWon = false;
+        tEnd = toc;
+        return
     end
 end
 
-%Now test for m_1, aka message = 1
-mTest = dec2bin(1);
-for i = 1:2^K
-    rTest = dec2bin(i, K);
-    cTest = commit(mTest, rTest, X, sha256hasher);
-    if strcmp(cTest, c)
-        %If we find a collison, we loose
-        if brokeHidenProp
-            adversaryWon = false;
-            tEnd = toc;
-            return
-        end
-        brokeHidenProp = true;
-    end
-end
-
-if brokeHidenProp
+if foundM0Key || foundM1Key
     adversaryWon = true;
 end
 
