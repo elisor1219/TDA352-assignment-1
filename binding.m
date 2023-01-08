@@ -280,57 +280,69 @@ clc;clf;clear;
 
 %Throw total of 2^17 balls
 %2^16 red balls and 2^16 green balls
-tic
-redBalls = 2^16;         %16 is from the assignment
+tStart = tic;
+redBalls = 1;
 greenBalls = 2^16;
-goForIterations = 1:1;
+goForIterations = 1:200;
 XIterations = 0:30;     %From assignment X \in [0,30]
 
 bindingBroken = zeros(size(goForIterations,2), size(XIterations,2));
+
+timer1 = zeros(size(XIterations,2),size(goForIterations,2));
+timer2 = zeros(size(XIterations,2),size(goForIterations,2));
+timer3 = zeros(size(XIterations,2),size(goForIterations,2));
+
 
 for i = XIterations
     X = i;
     bins = 2.^X;
     disp("i = " + i);
 
-    tic
     for j = goForIterations
-        ballsInWhichBin = randUniform(1, bins, 2, redBalls);
-        ballsInWhichBin = sort(ballsInWhichBin,2);
-        
-        pRed = 1;
-        pGreen = 1;
-        for k = 1:size(ballsInWhichBin,2)
-            if ballsInWhichBin(1,pRed) < ballsInWhichBin(2,pGreen)
-                pRed = pRed + 1;
-                continue
-            elseif ballsInWhichBin(1,pRed) > ballsInWhichBin(2,pGreen)
-                pGreen = pGreen + 1;
-                continue
-            else
-                bindingBroken(j,i+1) = 1;
-                break;
-            end
+        t1 = tic;
+        redBallsInWhichBin = randUniform(1, bins, 1, redBalls);
+        timer1(i+1,j) = toc(t1);
+        t2 = tic;
+        greenBallsInWhichBin = randUniform(1, bins, 1, greenBalls);
+        timer2(i+1,j) = toc(t2);
+        t3 = tic;
+        if sum(redBallsInWhichBin == greenBallsInWhichBin) >= 1
+            bindingBroken(j,i+1) = 1;
         end
+        timer3(i+1,j) = toc(t3);
     end
-    toc
 end
 
 
 bindingBrokenProb = sum(bindingBroken,1)./size(bindingBroken,1);
-toc
-% Plot for v4
+toc(tStart)
+%% Plot for v4
 clf;
+x = 0:30;
+sigmoidFun = @(x) 1 ./ (1 + exp(17 - x));
+simFun = @(x) 1 - sigmoidFun(x);
+
+hold on
+%Plot the simulation
 plot(XIterations, bindingBrokenProb(XIterations+1), "LineWidth", 2);
+%Plot a similar function
+plot(x, simFun(x), "LineWidth", 2)
+hold off
 grid on
 
-legend("Overfull bins", "FontSize",17, 'Location','southwest')
-title("Probability of breaking the binding property", "FontSize",17)
-xlabel("X = truncation point", "FontSize",17)
-ylabel("Probability", "FontSize",17)
+textInLegend = ["Overfull bins", "$\frac{1}{1 \, + \, \exp ({17 - x})}$"];
+legend(textInLegend, "FontSize",20, 'Location','southwest', 'Interpreter','latex')
+title("Probability of breaking the binding property", "FontSize",14)
+xlabel("X = truncation point", "FontSize",15)
+ylabel("Probability", "FontSize",15)
 axis([0 XIterations(end) 0 1.1])
 
 saveas(gcf, "bindingBinsV4.png");
+%%
+clf;
+hold on
+plot(x, simFun(x), "LineWidth", 2)
+plot(x, sigmoidFun(x), "LineWidth", 2)
 
 %%
 A = [1 2 5 1, 3 6 7 8];
