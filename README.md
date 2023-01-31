@@ -1,2 +1,3 @@
-First run the java file.
-Then the matlab file.
+Java filed scraped...
+
+Now you only need to run the 'binding.m' and 'hiding.m'
